@@ -22,15 +22,22 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Transform happyEmojiImage, sadEmojiImage;
 
-
-
-
+    [SerializeField]
+    private GameObject resultPanel;
 
     private static List<Question> unansweredQuestions;
 
     private Question currentQuestion;
 
     int correctCount, wrongCount;
+
+    int totalScore;
+
+    ResultManager resultManager;
+    
+
+
+
 
 
 
@@ -44,6 +51,7 @@ public class GameManager : MonoBehaviour
         }
         correctCount = 0;
         wrongCount = 0;
+        totalScore = 0;
         chooseRandomQuestion();
 
 
@@ -85,9 +93,12 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         if (unansweredQuestions.Count <= 0)
         {
-            Debug.Log("Correct Count : "+correctCount);
-            Debug.Log("Wrong Count : "+wrongCount);
-            Debug.Log("Result Panel");
+            resultPanel.SetActive(true);
+            resultManager = Object.FindObjectOfType<ResultManager>();
+            resultManager.WriteResults(correctCount,wrongCount,totalScore);
+            
+
+
         }
         else
         {
@@ -104,6 +115,7 @@ public class GameManager : MonoBehaviour
 
             correctCount++;
             Debug.Log("Correct!!");
+            totalScore += 100;
             happyEmojiImage.transform.GetComponent<RectTransform>().DOScale(1, 0.3f);
 
 
@@ -114,6 +126,7 @@ public class GameManager : MonoBehaviour
 
             wrongCount++;
             Debug.Log("Wrong!!");
+            totalScore -= 100;
             sadEmojiImage.transform.GetComponent<RectTransform>().DOScale(1, 0.3f);
 
         }
@@ -127,6 +140,7 @@ public class GameManager : MonoBehaviour
         {
             correctCount++;
             Debug.Log("Correct!!");
+            totalScore += 100;
             happyEmojiImage.transform.GetComponent<RectTransform>().DOScale(1, 0.3f);
 
         }
@@ -134,6 +148,7 @@ public class GameManager : MonoBehaviour
         {
             wrongCount++;
             Debug.Log("Wrong!!");
+            totalScore -= 100;
             sadEmojiImage.transform.GetComponent<RectTransform>().DOScale(1, 0.3f);
         }
         correctButton.GetComponent<RectTransform>().DOLocalMoveX(-2000, 0.5f);
